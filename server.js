@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 app.get("/health", (_, res) => res.json({ ok: true }));
+// Expose the player names and aliases used by the answer checker for live suggestions.
+app.get("/api/players", (_, res) => res.json(PLAYERS.map(p => ({ name: p.name, aliases: p.aliases || [] }))));
 
 const CLUBS = [
   { id:"barca", name:"Barcelona", league:"La Liga", icon:"🔵🔴" },

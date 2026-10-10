@@ -26,11 +26,20 @@ function say(id,msg){$(id).textContent=msg||""}
 function normalizePlayerName(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9ก-๙]/g,"")}
 fetch("/api/players").then(r=>r.ok?r.json():[]).then(data=>{playerDirectory=Array.isArray(data)?data:[]}).catch(()=>{});
 function hideSuggestions(){$("playerSuggestions").classList.add("hidden");$("playerSuggestions").innerHTML="";suggestionIndex=-1}
+function playerEditDistance(a,b){
+ const row=Array.from({length:b.length+1},(_,i)=>i);
+ for(let i=1;i<=a.length;i++){let prev=row[0];row[0]=i;for(let j=1;j<=b.length;j++){const old=row[j];row[j]=Math.min(row[j]+1,row[j-1]+1,prev+(a[i-1]===b[j-1]?0:1));prev=old;}}
+ return row[b.length];
+}
 function updateSuggestions(){
  const input=$("answer"), box=$("playerSuggestions"), query=normalizePlayerName(input.value.trim());
  if(!query||input.disabled||!playerDirectory.length){hideSuggestions();return}
- const found=playerDirectory.map(p=>({player:p,match:[p.name,...p.aliases].some(n=>normalizePlayerName(n).startsWith(query)),contains:[p.name,...p.aliases].some(n=>normalizePlayerName(n).includes(query))}))
- .filter(x=>x.match||x.contains).sort((a,b)=>Number(b.match)-Number(a.match)||a.player.name.localeCompare(b.player.name)).slice(0,7);
+ const found=playerDirectory.map(p=>{
+  const names=[p.name,...p.aliases].map(normalizePlayerName);
+  const match=names.some(n=>n.startsWith(query)), contains=names.some(n=>n.includes(query));
+  const fuzzy=query.length>=5&&names.some(n=>playerEditDistance(query,n.slice(0,Math.max(query.length,n.length)))<=(query.length>=10?2:1));
+  return {player:p,match,contains,fuzzy};
+ }).filter(x=>x.match||x.contains||x.fuzzy).sort((a,b)=>Number(b.match)-Number(a.match)||Number(b.contains)-Number(a.contains)||a.player.name.localeCompare(b.player.name)).slice(0,7);
  if(!found.length){hideSuggestions();return}
  box.innerHTML=found.map((x,i)=>`<button type="button" class="suggestion" role="option" data-index="${i}">${esc(x.player.name)}<small>${x.player.aliases.length?"ชื่อที่เรียกได้: "+esc(x.player.aliases.slice(0,4).join(", ")):"เลือกชื่อนักเตะนี้"}</small></button>`).join("");
  box.classList.remove("hidden");suggestionIndex=-1;

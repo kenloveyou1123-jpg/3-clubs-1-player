@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3 สโมสร 1 นักฟุตบอล — Online</title>
+<style>
+:root{--bg:#08111f;--panel:#111e31;--line:#2b405e;--text:#f2f6ff;--muted:#a9b8ce;--cyan:#52e0d0;--gold:#ffd166;--red:#ff758f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#162b49 0,#08111f 58%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}main{max-width:960px;margin:auto;padding:24px 16px 50px}h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.02;margin:8px 0}h2{font-size:1.15rem;margin:0 0 14px}.eyebrow{color:var(--cyan);font-size:.8rem;font-weight:800;letter-spacing:.12em}.muted{color:var(--muted);line-height:1.6}.panel{background:linear-gradient(145deg,#172740,#0d1a2c);border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:16px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.clubs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.club{background:#091525;border:1px solid #365071;border-radius:15px;padding:15px 8px;text-align:center;min-height:105px}.club .icon{font-size:1.7rem}.club b{display:block;margin-top:8px}.club small{color:var(--muted)}input{width:100%;background:#091525;border:1px solid #38506f;color:white;padding:12px;border-radius:11px;font:inherit;margin:6px 0 12px}label{font-size:.9rem;color:var(--muted)}button{background:var(--cyan);color:#06201f;border:0;border-radius:11px;padding:12px 15px;font:inherit;font-weight:800;cursor:pointer}button.alt{background:#263b58;color:white;border:1px solid #405879}button.gold{background:var(--gold);color:#2b2100}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.hidden{display:none!important}.pill{display:inline-block;border:1px solid var(--line);padding:6px 10px;border-radius:99px;color:var(--muted);font-size:.85rem}.status{margin:12px 0;color:var(--cyan);min-height:1.4em}.list{display:grid;gap:9px}.item{padding:12px;background:#091525;border:1px solid var(--line);border-radius:12px}.item small{display:block;color:var(--muted);margin-top:5px}.pts{float:right;color:var(--gold);font-weight:900}.warning{border-left:3px solid var(--gold);padding:8px 12px;color:var(--muted);font-size:.9rem}a{color:var(--cyan)}@media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:15px}.clubs{gap:6px}.club{font-size:.9rem;padding:12px 5px}}
+</style></head><body><main>
+<div class="eyebrow">ONLINE FOOTBALL PARTY QUIZ</div><h1>3 สโมสร<br><span style="color:var(--cyan)">1 นักฟุตบอล</span></h1><p class="muted">สร้างห้อง ส่งรหัสให้เพื่อน แล้วทุกคนพิมพ์คำตอบจากเครื่องของตัวเอง</p>
+<section class="panel" id="entry">
+<div class="grid"><div><h2>สร้างห้องใหม่</h2><label>ชื่อเล่นของคุณ</label><input id="hostNick" maxlength="20" placeholder="เช่น บอล"><button id="createBtn">สร้างห้อง</button></div>
+<div><h2>เข้าร่วมห้อง</h2><label>ชื่อเล่น</label><input id="joinNick" maxlength="20" placeholder="ชื่อที่เพื่อนเห็น"><label>รหัสห้อง</label><input id="joinCode" maxlength="6" placeholder="เช่น A1B2C3" style="text-transform:uppercase"><button class="alt" id="joinBtn">เข้าร่วมห้อง</button></div></div><div id="entryStatus" class="status"></div>
+</section>
+<section class="panel hidden" id="game">
+<div class="row" style="justify-content:space-between"><div><span class="pill" id="roomPill">ROOM</span> <span class="pill" id="roundPill">รอบ 1</span></div><button class="alt" id="copyBtn">คัดลอกรหัสห้อง</button></div>
+<p class="muted">ส่งรหัสห้องให้เพื่อนเพื่อเข้ามาเล่นจากอุปกรณ์ของตัวเอง</p><h2>สโมสรทั้ง 3</h2><div id="clubs" class="clubs"></div>
+<div class="grid"><div class="panel" style="margin:0"><h2>คำตอบของคุณ</h2><label>ชื่อนักฟุตบอล (ใช้ชื่อเต็มหรือชื่อเล่นในฐานข้อมูล)</label><input id="answer" placeholder="เช่น Ronaldo Nazário"><button id="submitBtn">ส่งคำตอบ</button><div id="answerStatus" class="status"></div><p class="warning">ฐานข้อมูลเริ่มต้นมีนักเตะตัวอย่างบางส่วนเท่านั้น หากไม่พบชื่อ ระบบจะขึ้นว่าไม่อยู่ในฐานข้อมูล ไม่ควรถือว่าคำตอบผิดโดยไม่ตรวจสอบ</p></div>
+<div class="panel" style="margin:0"><h2>ผู้เล่นในห้อง</h2><div id="players" class="list"></div><div id="hostControls" class="row hidden" style="margin-top:14px"><button class="gold" id="revealBtn">เฉลยและคิดคะแนน</button><button id="nextBtn">รอบถัดไป</button><button class="alt" id="resetBtn">เริ่มคะแนนใหม่</button></div></div></div>
+<h2 style="margin-top:24px">เฉลยรอบนี้</h2><div id="results" class="list"><p class="muted">รอเจ้าของห้องกดเฉลย…</p></div>
+</section>
+<p class="muted" style="font-size:.82rem;margin-top:18px">หมายเหตุ: ต้นแบบนี้เป็นห้องออนไลน์แบบเรียลไทม์เมื่อรันบนเซิร์ฟเวอร์ที่เข้าถึงได้จากอินเทอร์เน็ต ฐานข้อมูลนักเตะยังเป็นชุดเริ่มต้นและควรตรวจสอบแหล่งอ้างอิงก่อนใช้แข่งอย่างเป็นทางการ</p>
+</main>
+<script src="/socket.io/socket.io.js"></script><script>
+const socket=io();let myId=null,room=null;
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function say(id,msg){$(id).textContent=msg||""}
+function call(event,data,statusId){return new Promise(resolve=>socket.emit(event,data,res=>{if(res?.error){if(statusId)say(statusId,res.error);resolve(null)}else{if(statusId)say(statusId,"");resolve(res)}}))}
+async function enter(mode){const nickname=$(mode==="create"?"hostNick":"joinNick").value.trim();if(!nickname){say("entryStatus","กรุณาใส่ชื่อเล่นก่อน");return}let res;if(mode==="create")res=await call("room:create",{nickname},"entryStatus");else res=await call("room:join",{nickname,code:$("joinCode").value},"entryStatus");if(res?.room){room=res.room;myId=socket.id;$("entry").classList.add("hidden");$("game").classList.remove("hidden");render(room)}}
+$("createBtn").onclick=()=>enter("create");$("joinBtn").onclick=()=>enter("join");
+$("submitBtn").onclick=async()=>{const res=await call("answer:submit",{answer:$("answer").value},"answerStatus");if(res){say("answerStatus","ส่งคำตอบแล้ว รอเฉลย");$("answer").disabled=true;$("submitBtn").disabled=true}};
+$("revealBtn").onclick=()=>call("round:reveal",{},"answerStatus");
+$("nextBtn").onclick=async()=>{const res=await call("round:next",{},"answerStatus");if(res){$("answer").value="";$("answer").disabled=false;$("submitBtn").disabled=false}};
+$("resetBtn").onclick=async()=>{const res=await call("room:reset",{},"answerStatus");if(res){$("answer").value="";$("answer").disabled=false;$("submitBtn").disabled=false}};
+$("copyBtn").onclick=async()=>{try{await navigator.clipboard.writeText(room.code);$("copyBtn").textContent="คัดลอกแล้ว"}catch{$("copyBtn").textContent="รหัส: "+room.code}};
+socket.on("room:update",data=>{if(room&&data.code===room.code){room=data;render(room)}});
+function render(r){
+$("roomPill").textContent="รหัสห้อง "+r.code;$("roundPill").textContent="รอบ "+r.round;
+$("clubs").innerHTML=r.clubs.map(c=>`<div class="club"><div class="icon">${c.icon}</div><b>${esc(c.name)}</b><small>${esc(c.league)}</small></div>`).join("");
+$("players").innerHTML=r.players.slice().sort((a,b)=>b.score-a.score).map(p=>`<div class="item"><span class="pts">${p.score} แต้ม</span><b>${esc(p.nickname)}${p.id===r.hostId?" 👑":""}</b><small>${p.submitted?"ส่งคำตอบแล้ว":"กำลังคิดคำตอบ…"}</small></div>`).join("");
+const isHost=socket.id===r.hostId;$("hostControls").classList.toggle("hidden",!isHost);$("revealBtn").disabled=r.status!=="playing";$("nextBtn").disabled=r.status!=="revealed";
+if(r.status==="revealed"&&r.answers.length){$("results").innerHTML=r.answers.map(a=>`<div class="item"><span class="pts">+${a.points} แต้ม</span><b>${esc(a.nickname)}</b><small>คำตอบ: ${esc(a.submitted||"ไม่ได้ส่ง")}</small><small>${a.matched?`ตรวจพบ: ${esc(a.matched)} · ตรง ${a.points}/3 สโมสร (${a.clubs.map(esc).join(", ")||"ไม่มีสโมสรตรงกัน"})`:a.unknown?"ไม่พบในฐานข้อมูลตัวอย่าง — โปรดตรวจสอบด้วยคน":"ไม่ได้ส่งคำตอบ"}</small>${a.years?`<small>${esc(a.years)}</small>`:""}${a.sources?.length?`<small>${a.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</small>`:""}</div>`).join("")}else $("results").innerHTML='<p class="muted">รอเจ้าของห้องกดเฉลย…</p>';
+}
+</script></body></html>
